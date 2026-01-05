@@ -2,3 +2,6 @@ body {
     align-content: center;
     background: gold;
 }
+div.jumbotron {
+    background: gold;
+}
