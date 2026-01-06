@@ -8,13 +8,51 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="strava.js"></script>
 </head>
 
-<div class="jumbotron text-center">
+<div class="jumbotron text-center" style="background: gold;">
     <h1>Remaining Miles:</h1>
-    <p>364</p>
+    <p id="remainingMiles">Loading...</p>
 </div>
 
-<img src="assets/PITT Flag.png" alt="Flag of Pittsburgh">
+<div class="progress">
+    <div class="progress-bar progress-bar-gold active" role="progressbar" aria-valuenow="40" aria-valuemin="0"
+        aria-valuemax="100" style="width:40%">
+        40%
+    </div>
+</div>
+
+<img src="assets/PITT Flag.png" alt="Flag of Pittsburgh" style="align-self: center;">
+
+<script>
+    // Initialize the page with remaining miles
+    async function initializePage() {
+        try {
+            // Check for stored access token
+            const accessToken = localStorage.getItem('stravaAccessToken');
+
+            if (!accessToken) {
+                document.getElementById('remainingMiles').textContent = 'Please authenticate with Strava';
+                return;
+            }
+
+            // Fetch stats from Strava
+            const stats = await getDebtWalkStats(accessToken);
+
+            // Update the remaining miles display
+            document.getElementById('remainingMiles').textContent = stats.remainingMiles.toFixed(2) + ' Miles';
+
+            // Log details for debugging
+            console.log('Debt Walk Stats:', stats);
+        } catch (error) {
+            console.error('Failed to load Debt Walk stats:', error);
+            document.getElementById('remainingMiles').textContent = 'Error loading data';
+        }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', initializePage);
+</script>
 
 </html>
