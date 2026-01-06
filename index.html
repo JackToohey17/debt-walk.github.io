@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="strava.js"></script>
+    <script src="strava_test.js"></script>
 </head>
 
 <div class="jumbotron text-center" style="background: gold;">
+    <h2 id="athleteName" style="color: #333; margin-bottom: 20px;">Loading athlete info...</h2>
     <h1>Remaining Miles:</h1>
     <p id="remainingMiles">Loading...</p>
 </div>
@@ -26,15 +27,23 @@
 <img src="assets/PITT Flag.png" alt="Flag of Pittsburgh" style="align-self: center;">
 
 <script>
-    // Initialize the page with remaining miles
+    // Initialize the page with remaining miles and athlete name
     async function initializePage() {
         try {
             // Check for stored access token
             const accessToken = localStorage.getItem('stravaAccessToken');
+            const storedAthlete = localStorage.getItem('stravaAthlete');
 
             if (!accessToken) {
                 document.getElementById('remainingMiles').textContent = 'Please authenticate with Strava';
+                document.getElementById('athleteName').textContent = 'Not authenticated';
                 return;
+            }
+
+            // Display athlete name if stored
+            if (storedAthlete) {
+                const athlete = JSON.parse(storedAthlete);
+                document.getElementById('athleteName').textContent = athlete.name;
             }
 
             // Fetch stats from Strava
